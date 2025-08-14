@@ -1,5 +1,5 @@
 from os import getenv
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, DataFrame
 from src.domain.entities.person import Person
 from src.domain.interfaces.ikafka_consumer import IKafkaConsumer
 from src.domain.interfaces.iscylla_repository import IScyllaRepository
@@ -30,7 +30,7 @@ class PersonEventHandler:
             logger.error(f"Error processing messages: {e}")
             return
 
-    def __process_value(self, df):
+    def __process_value(self, df: DataFrame):
         try:
             if df.isEmpty():
                 logger.warning("No messages to process.")
