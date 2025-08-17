@@ -47,8 +47,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: app
-    volumes:
-      - ..:/workspaces:cached
     command: sleep infinity
     restart: always
     networks:
