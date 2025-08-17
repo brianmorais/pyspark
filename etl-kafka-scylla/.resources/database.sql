@@ -1,5 +1,5 @@
 CREATE KEYSPACE IF NOT EXISTS etl 
-WITH replication = {'class': 'NetworkTopologyStrategy', 'datacenter1': 1 };
+WITH replication = { 'class': 'NetworkTopologyStrategy', 'datacenter1': 1 };
 
 CREATE TABLE etl.persons (
     name text,
