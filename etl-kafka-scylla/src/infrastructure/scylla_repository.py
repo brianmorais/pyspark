@@ -1,8 +1,8 @@
 from pyspark.sql.dataframe import DataFrame
-from src.domain.interfaces.iscylla_repository import IScyllaRepository
+from src.domain.interfaces.idatabase_repository import IDatabaseRepository
 from src.infrastructure.scylla_connection import ScyllaConnection
 
-class ScyllaRepository(IScyllaRepository):
+class ScyllaRepository(IDatabaseRepository):
     def __init__(self, scylla_connection: ScyllaConnection):
         self.scylla_connection = scylla_connection
 

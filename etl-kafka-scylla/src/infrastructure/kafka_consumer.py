@@ -1,12 +1,12 @@
 from os import getenv
 from pyspark.sql import SparkSession
 from pyspark.sql.dataframe import DataFrame
-from src.domain.interfaces.ikafka_consumer import IKafkaConsumer
+from src.domain.interfaces.imessager import IMessager
 from pyspark.sql.functions import to_json, struct, col
 
 bootstrap_servers = getenv("KAFKA_BOOTSTRAP_SERVERS", "")
 
-class KafkaConsumer(IKafkaConsumer):
+class KafkaConsumer(IMessager):
     def __init__(self, spark: SparkSession):
         self.spark = spark
 

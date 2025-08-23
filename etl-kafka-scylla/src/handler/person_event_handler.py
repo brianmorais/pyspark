@@ -1,8 +1,8 @@
 from os import getenv
 from pyspark.sql import SparkSession, DataFrame
 from src.domain.entities.person import Person
-from src.domain.interfaces.ikafka_consumer import IKafkaConsumer
-from src.domain.interfaces.iscylla_repository import IScyllaRepository
+from src.domain.interfaces.imessager import IMessager
+from src.domain.interfaces.idatabase_repository import IDatabaseRepository
 from pyspark.sql.functions import from_json, col
 from src.helper.logger import get_logger
 
@@ -13,14 +13,14 @@ table = getenv("SCYLLA_TABLE", "")
 logger = get_logger(__name__)
 
 class PersonEventHandler:
-    def __init__(self, spark: SparkSession, kafka_consumer: IKafkaConsumer, scylla_repository: IScyllaRepository):
+    def __init__(self, spark: SparkSession, messager: IMessager, database_repository: IDatabaseRepository):
         self.spark = spark
-        self.kafka_consumer = kafka_consumer
-        self.scylla_repository = scylla_repository
+        self.messager = messager
+        self.database_repository = database_repository
 
     def handle(self):
         try:
-            df = self.kafka_consumer.consume_messages(persons_topic)
+            df = self.messager.consume_messages(persons_topic)
             query = df.writeStream \
                 .foreachBatch(lambda df, _: self.__process_value(df)) \
                 .outputMode("append") \
@@ -40,7 +40,7 @@ class PersonEventHandler:
                     .select("person.*") \
                     .withColumn("age_in_months", col("age") * 12)
             
-            self.scylla_repository.insert_person(df_json, keyspace, table)
-            self.kafka_consumer.send_message(processed_topic, df_json)
+            self.database_repository.insert_person(df_json, keyspace, table)
+            self.messager.send_message(processed_topic, df_json)
         except Exception as e:
             logger.error(f"Error processing value: {e}")

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pyspark.sql.dataframe import DataFrame
 
-class IKafkaConsumer(ABC):
+class IMessager(ABC):
     @abstractmethod
     def consume_messages(self, topic: str) -> DataFrame:
         """"""
